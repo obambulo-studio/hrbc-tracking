@@ -29,6 +29,10 @@ export default async function RootLayout({
 }>) {
   const user = await currentUser();
 
+  if (!user) {
+    redirect("/sign-in");
+  }
+
   const isAdmin = user && user.privateMetadata.admin === true;
 
   if (!isAdmin) {
