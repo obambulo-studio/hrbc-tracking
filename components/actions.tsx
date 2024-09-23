@@ -65,14 +65,16 @@ export default function EntryActions({ id }: { id: string }) {
         <DropdownMenuContent side="right" align="start">
           <Link
             href={`/dashboard/reactions/${id}`}
-            className="flex items-center">
+            className="flex items-center"
+          >
             <DropdownMenuItem className="w-full">
               <PersonIcon className="w-4 h-4 mr-2" /> Attendees
             </DropdownMenuItem>
           </Link>
           <DropdownMenuItem
             className="flex items-center text-destructive focus:text-destructive "
-            onSelect={() => setShowDeleteAlert(true)}>
+            onSelect={() => setShowDeleteAlert(true)}
+          >
             <Trash className="w-4 h-4 mr-2" />
             Delete
           </DropdownMenuItem>
@@ -115,7 +117,8 @@ export default function EntryActions({ id }: { id: string }) {
                 setIsLoading(false);
                 setShowDeleteAlert(false);
               }}
-              className={buttonVariants({ variant: "destructive" })}>
+              className={buttonVariants({ variant: "destructive" })}
+            >
               {isMutating ? (
                 <Loader2 className="mr-2 h-4 w-4 animate-spin" />
               ) : (

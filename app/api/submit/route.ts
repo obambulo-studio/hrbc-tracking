@@ -37,7 +37,7 @@ export async function POST(request: Request) {
     console.error("Error submitting data:", error);
     return NextResponse.json(
       { success: false, error: "Failed to submit data" },
-      { status: 500 }
+      { status: 500 },
     );
   }
 }

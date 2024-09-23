@@ -27,7 +27,7 @@ const formSchema = z.object({
     z.object({
       ageBracket: z.string(),
       count: z.number().min(0),
-    })
+    }),
   ),
 });
 
@@ -126,7 +126,7 @@ export default function NewEntryPage() {
           ninetyFivePlus: ageBrackets["95+"],
           total: Object.values(ageBrackets).reduce(
             (acc, curr) => acc + curr,
-            0
+            0,
           ),
         }),
       });
@@ -160,19 +160,22 @@ export default function NewEntryPage() {
               <div key={bracket} className="flex flex-col space-y-1.5">
                 <Label
                   className="text-center font-semibold text-lg"
-                  htmlFor={`age-${bracket}`}>{`${bracket}`}</Label>
+                  htmlFor={`age-${bracket}`}
+                >{`${bracket}`}</Label>
                 <div className="flex items-center justify-center space-x-2">
                   <Button
                     type="button"
                     size="icon"
-                    onClick={() => handleDecrement(bracket)}>
+                    onClick={() => handleDecrement(bracket)}
+                  >
                     <MinusIcon className="h-4 w-4" />
                   </Button>
                   <span className="w-8 text-center text-sm">{count}</span>
                   <Button
                     type="button"
                     size="icon"
-                    onClick={() => handleIncrement(bracket)}>
+                    onClick={() => handleIncrement(bracket)}
+                  >
                     <PlusIcon className="h-4 w-4" />
                   </Button>
                 </div>

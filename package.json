@@ -6,7 +6,7 @@
     "dev": "next dev",
     "build": "next build",
     "start": "next start",
-    "lint": "next lint"
+    "prettier": "prettier --write --ignore-unknown ."
   },
   "dependencies": {
     "@clerk/nextjs": "^5.6.0",
@@ -60,17 +60,18 @@
     "sonner": "^1.5.0",
     "tailwind-merge": "^2.5.2",
     "tailwindcss-animate": "^1.0.7",
-    "ts-node": "^10.9.2",
     "vaul": "^0.9.4",
     "zod": "^3.23.8"
   },
   "devDependencies": {
-    "@types/node": "^22.5.5",
+    "@types/node": "^20.16.5",
     "@types/react": "^18.3.8",
     "@types/react-dom": "^18.3.0",
-    "eslint": "^8.57.1",
-    "eslint-config-next": "14.2.13",
+    "autoprefixer": "^10.4.20",
+    "eslint": "^9.11.0",
+    "eslint-config-next": "14.2.3",
     "postcss": "^8.4.47",
+    "prettier": "3.2.5",
     "tailwindcss": "^3.4.12",
     "typescript": "^5.6.2"
   }

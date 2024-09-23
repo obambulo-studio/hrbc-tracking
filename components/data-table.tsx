@@ -50,7 +50,7 @@ export function EntryDataTable<TData, TValue>({
 
   const [sorting, setSorting] = React.useState<SortingState>(defaultSorting);
   const [columnFilters, setColumnFilters] = React.useState<ColumnFiltersState>(
-    []
+    [],
   );
   const [columnVisibility, setColumnVisibility] =
     React.useState<VisibilityState>({});
@@ -85,7 +85,7 @@ export function EntryDataTable<TData, TValue>({
               .toLowerCase()
               .includes(globalSearch.toLowerCase())
           );
-        })
+        }),
       )
     : table.getRowModel().rows;
 
@@ -103,7 +103,7 @@ export function EntryDataTable<TData, TValue>({
                         ? null
                         : flexRender(
                             header.column.columnDef.header,
-                            header.getContext()
+                            header.getContext(),
                           )}
                     </TableHead>
                   );
@@ -116,12 +116,13 @@ export function EntryDataTable<TData, TValue>({
               filteredRows.map((row) => (
                 <TableRow
                   key={row.id}
-                  data-state={row.getIsSelected() && "selected"}>
+                  data-state={row.getIsSelected() && "selected"}
+                >
                   {row.getVisibleCells().map((cell) => (
                     <TableCell key={cell.id}>
                       {flexRender(
                         cell.column.columnDef.cell,
-                        cell.getContext()
+                        cell.getContext(),
                       )}
                     </TableCell>
                   ))}
@@ -131,7 +132,8 @@ export function EntryDataTable<TData, TValue>({
               <TableRow>
                 <TableCell
                   colSpan={columns.length}
-                  className="h-24 text-center">
+                  className="h-24 text-center"
+                >
                   No results.
                 </TableCell>
               </TableRow>
@@ -147,7 +149,8 @@ export function EntryDataTable<TData, TValue>({
               <Button
                 variant="outline"
                 size="sm"
-                className="ml-auto mt-4 sm:mt-0">
+                className="ml-auto mt-4 sm:mt-0"
+              >
                 Columns
               </Button>
             </DropdownMenuTrigger>
@@ -163,7 +166,8 @@ export function EntryDataTable<TData, TValue>({
                       checked={column.getIsVisible()}
                       onCheckedChange={(value) =>
                         column.toggleVisibility(!!value)
-                      }>
+                      }
+                    >
                       {column.id}
                     </DropdownMenuCheckboxItem>
                   );
@@ -183,7 +187,7 @@ export function EntryDataTable<TData, TValue>({
               {Math.min(
                 (table.getState().pagination.pageIndex + 1) *
                   table.getState().pagination.pageSize,
-                data.length
+                data.length,
               )}
             </span>{" "}
             of <span className="font-semibold">{data.length}</span> entries{" "}
@@ -195,14 +199,16 @@ export function EntryDataTable<TData, TValue>({
             variant="outline"
             size="sm"
             onClick={() => table.previousPage()}
-            disabled={!table.getCanPreviousPage()}>
+            disabled={!table.getCanPreviousPage()}
+          >
             Previous
           </Button>
           <Button
             variant="outline"
             size="sm"
             onClick={() => table.nextPage()}
-            disabled={!table.getCanNextPage()}>
+            disabled={!table.getCanNextPage()}
+          >
             Next
           </Button>
         </div>
