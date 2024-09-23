@@ -1,3 +1,4 @@
+import Analytics from "@/components/analytics";
 import { entryColumns } from "@/components/columns";
 import { EntryDataTable } from "@/components/data-table";
 import { Button } from "@/components/ui/button";
@@ -30,7 +31,9 @@ export default async function Home() {
         <TabsContent
           value="analytics"
           className="bg-black border rounded-2xl p-6"
-        ></TabsContent>
+        >
+          <Analytics data={data} />
+        </TabsContent>
       </Tabs>
     </div>
   );

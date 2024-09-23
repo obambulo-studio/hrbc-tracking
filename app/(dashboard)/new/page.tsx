@@ -9,12 +9,21 @@ import {
   DialogFooter,
   DialogTitle,
 } from "@/components/ui/dialog";
-import { Label } from "@/components/ui/label";
+import {
+  Table,
+  TableBody,
+  TableCaption,
+  TableCell,
+  TableFooter,
+  TableHead,
+  TableHeader,
+  TableRow,
+} from "@/components/ui/table";
 import { useToast } from "@/hooks/use-toast";
 import { DialogTrigger } from "@radix-ui/react-dialog";
 import { MinusIcon, PlusIcon } from "@radix-ui/react-icons";
 import { Loader2, PlusCircle } from "lucide-react";
-import { useRouter } from "next/navigation"; // Add this import
+import { useRouter } from "next/navigation";
 import { useState } from "react";
 import { z } from "zod";
 
@@ -27,14 +36,15 @@ const formSchema = z.object({
     z.object({
       ageBracket: z.string(),
       count: z.number().min(0),
+      gender: z.string(),
     }),
   ),
 });
 
 export default function NewEntryPage() {
   const { toast } = useToast();
-  const router = useRouter(); // Initialize the router
-  const [ageBrackets, setAgeBrackets] = useState<AgeBrackets>({
+  const router = useRouter();
+  const [maleAgeBrackets, setMaleAgeBrackets] = useState<AgeBrackets>({
     "0-4": 0,
     "5-9": 0,
     "10-14": 0,
@@ -56,9 +66,39 @@ export default function NewEntryPage() {
     "90-94": 0,
     "95+": 0,
   });
-  const [loading, setLoading] = useState(false); // Add loading state
+  const [femaleAgeBrackets, setFemaleAgeBrackets] = useState<AgeBrackets>({
+    "0-4": 0,
+    "5-9": 0,
+    "10-14": 0,
+    "15-19": 0,
+    "20-24": 0,
+    "25-29": 0,
+    "30-34": 0,
+    "35-39": 0,
+    "40-44": 0,
+    "45-49": 0,
+    "50-54": 0,
+    "55-59": 0,
+    "60-64": 0,
+    "65-69": 0,
+    "70-74": 0,
+    "75-79": 0,
+    "80-84": 0,
+    "85-89": 0,
+    "90-94": 0,
+    "95+": 0,
+  });
+  const [loading, setLoading] = useState(false);
 
-  const updateBracket = (bracket: string, increment: boolean) => {
+  const updateBracket = (
+    bracket: string,
+    increment: boolean,
+    gender: "male" | "female",
+  ) => {
+    const setAgeBrackets =
+      gender === "male" ? setMaleAgeBrackets : setFemaleAgeBrackets;
+    const ageBrackets = gender === "male" ? maleAgeBrackets : femaleAgeBrackets;
+
     setAgeBrackets((prev) => {
       const newCount = increment
         ? prev[bracket] + 1
@@ -66,7 +106,7 @@ export default function NewEntryPage() {
       return { ...prev, [bracket]: newCount };
     });
     toast({
-      title: `${increment ? "Incremented" : "Decremented"} ${bracket}`,
+      title: `${increment ? "Incremented" : "Decremented"} ${gender} ${bracket}`,
       description: `New count: ${
         increment
           ? ageBrackets[bracket] + 1
@@ -76,25 +116,60 @@ export default function NewEntryPage() {
     });
   };
 
-  const handleIncrement = (bracket: string) => updateBracket(bracket, true);
-  const handleDecrement = (bracket: string) => updateBracket(bracket, false);
+  const handleIncrement = (bracket: string, gender: "male" | "female") =>
+    updateBracket(bracket, true, gender);
+  const handleDecrement = (bracket: string, gender: "male" | "female") =>
+    updateBracket(bracket, false, gender);
 
   async function handleSubmit() {
-    setLoading(true); // Set loading to true
-    const attendees = Object.entries(ageBrackets)
-      .map(([ageBracket, count]) => ({ ageBracket, count }))
-      .filter((attendee) => attendee.count > 0);
+    setLoading(true);
 
-    const result = formSchema.safeParse({ attendees });
-    if (!result.success) {
-      setLoading(false); // Reset loading on error
-      toast({
-        title: "Validation Error",
-        description: result.error.errors.map((e) => e.message).join(", "),
-        variant: "destructive",
-      });
-      return;
-    }
+    const formattedData = {
+      date: new Date().toISOString(),
+      maleZeroToFour: maleAgeBrackets["0-4"],
+      femaleZeroToFour: femaleAgeBrackets["0-4"],
+      maleFiveToNine: maleAgeBrackets["5-9"],
+      femaleFiveToNine: femaleAgeBrackets["5-9"],
+      maleTenToFourteen: maleAgeBrackets["10-14"],
+      femaleTenToFourteen: femaleAgeBrackets["10-14"],
+      maleFifteenToNineteen: maleAgeBrackets["15-19"],
+      femaleFifteenToNineteen: femaleAgeBrackets["15-19"],
+      maleTwentyToTwentyFour: maleAgeBrackets["20-24"],
+      femaleTwentyToTwentyFour: femaleAgeBrackets["20-24"],
+      maleTwentyFiveToTwentyNine: maleAgeBrackets["25-29"],
+      femaleTwentyFiveToTwentyNine: femaleAgeBrackets["25-29"],
+      maleThirtyToThirtyFour: maleAgeBrackets["30-34"],
+      femaleThirtyToThirtyFour: femaleAgeBrackets["30-34"],
+      maleThirtyFiveToThirtyNine: maleAgeBrackets["35-39"],
+      femaleThirtyFiveToThirtyNine: femaleAgeBrackets["35-39"],
+      maleFortyToFortyFour: maleAgeBrackets["40-44"],
+      femaleFortyToFortyFour: femaleAgeBrackets["40-44"],
+      maleFortyFiveToFortyNine: maleAgeBrackets["45-49"],
+      femaleFortyFiveToFortyNine: femaleAgeBrackets["45-49"],
+      maleFiftyToFiftyFour: maleAgeBrackets["50-54"],
+      femaleFiftyToFiftyFour: femaleAgeBrackets["50-54"],
+      maleFiftyFiveToFiftyNine: maleAgeBrackets["55-59"],
+      femaleFiftyFiveToFiftyNine: femaleAgeBrackets["55-59"],
+      maleSixtyToSixtyFour: maleAgeBrackets["60-64"],
+      femaleSixtyToSixtyFour: femaleAgeBrackets["60-64"],
+      maleSixtyFiveToSixtyNine: maleAgeBrackets["65-69"],
+      femaleSixtyFiveToSixtyNine: femaleAgeBrackets["65-69"],
+      maleSeventyToSeventyFour: maleAgeBrackets["70-74"],
+      femaleSeventyToSeventyFour: femaleAgeBrackets["70-74"],
+      maleSeventyFiveToSeventyNine: maleAgeBrackets["75-79"],
+      femaleSeventyFiveToSeventyNine: femaleAgeBrackets["75-79"],
+      maleEightyToEightyFour: maleAgeBrackets["80-84"],
+      femaleEightyToEightyFour: femaleAgeBrackets["80-84"],
+      maleEightyFiveToEightyNine: maleAgeBrackets["85-89"],
+      femaleEightyFiveToEightyNine: femaleAgeBrackets["85-89"],
+      maleNinetyToNinetyFour: maleAgeBrackets["90-94"],
+      femaleNinetyToNinetyFour: femaleAgeBrackets["90-94"],
+      maleNinetyFivePlus: maleAgeBrackets["95+"],
+      femaleNinetyFivePlus: femaleAgeBrackets["95+"],
+      total:
+        Object.values(maleAgeBrackets).reduce((acc, curr) => acc + curr, 0) +
+        Object.values(femaleAgeBrackets).reduce((acc, curr) => acc + curr, 0),
+    };
 
     try {
       const response = await fetch("/api/entry/submit", {
@@ -102,33 +177,7 @@ export default function NewEntryPage() {
         headers: {
           "Content-Type": "application/json",
         },
-        body: JSON.stringify({
-          date: new Date().toISOString(),
-          zeroToFour: ageBrackets["0-4"],
-          fiveToNine: ageBrackets["5-9"],
-          tenToFourteen: ageBrackets["10-14"],
-          fifteenToNineteen: ageBrackets["15-19"],
-          twentyToTwentyFour: ageBrackets["20-24"],
-          twentyFiveToTwentyNine: ageBrackets["25-29"],
-          thirtyToThirtyFour: ageBrackets["30-34"],
-          thirtyFiveToThirtyNine: ageBrackets["35-39"],
-          fortyToFortyFour: ageBrackets["40-44"],
-          fortyFiveToFortyNine: ageBrackets["45-49"],
-          fiftyToFiftyFour: ageBrackets["50-54"],
-          fiftyFiveToFiftyNine: ageBrackets["55-59"],
-          sixtyToSixtyFour: ageBrackets["60-64"],
-          sixtyFiveToSixtyNine: ageBrackets["65-69"],
-          seventyToSeventyFour: ageBrackets["70-74"],
-          seventyFiveToSeventyNine: ageBrackets["75-79"],
-          eightyToEightyFour: ageBrackets["80-84"],
-          eightyFiveToEightyNine: ageBrackets["85-89"],
-          ninetyToNinetyFour: ageBrackets["90-94"],
-          ninetyFivePlus: ageBrackets["95+"],
-          total: Object.values(ageBrackets).reduce(
-            (acc, curr) => acc + curr,
-            0,
-          ),
-        }),
+        body: JSON.stringify(formattedData),
       });
 
       if (!response.ok) {
@@ -141,46 +190,94 @@ export default function NewEntryPage() {
       });
       router.push("/");
       router.refresh();
-    } catch {
+    } catch (error) {
       toast({
         title: "Submission Error",
         description: "An error occurred while submitting the data.",
         variant: "destructive",
       });
     } finally {
-      setLoading(false); // Reset loading state
+      setLoading(false);
     }
   }
 
   return (
-    <div className="max-w-2xl mx-auto p-6 my-12 bg-black border rounded-2xl">
+    <div className="max-w-4xl mx-auto p-6 my-12 bg-black border rounded-2xl">
       <div>
         <div className="space-y-8">
-          <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
-            {Object.entries(ageBrackets).map(([bracket, count]) => (
-              <div key={bracket} className="flex flex-col space-y-1.5">
-                <Label
-                  className="text-center font-semibold text-lg"
-                  htmlFor={`age-${bracket}`}
-                >{`${bracket}`}</Label>
-                <div className="flex items-center justify-center space-x-2">
-                  <Button
-                    type="button"
-                    size="icon"
-                    onClick={() => handleDecrement(bracket)}
-                  >
-                    <MinusIcon className="h-4 w-4" />
-                  </Button>
-                  <span className="w-8 text-center text-sm">{count}</span>
-                  <Button
-                    type="button"
-                    size="icon"
-                    onClick={() => handleIncrement(bracket)}
-                  >
-                    <PlusIcon className="h-4 w-4" />
-                  </Button>
-                </div>
-              </div>
+          <div className="flex gap-4">
+            {["male", "female"].map((gender) => (
+              <Table key={gender} className="min-w-[45%]">
+                <TableHeader>
+                  <TableRow>
+                    <TableHead className="w-full text-center" colSpan={3}>
+                      {gender.charAt(0).toUpperCase() + gender.slice(1)} Age
+                      Distribution
+                    </TableHead>
+                  </TableRow>
+                  <TableRow>
+                    <TableHead>Age Bracket</TableHead>
+                    <TableHead>Count</TableHead>
+                    <TableHead className="text-center">Actions</TableHead>
+                  </TableRow>
+                </TableHeader>
+
+                <TableCaption>
+                  {gender.charAt(0).toUpperCase() + gender.slice(1)} Age
+                  Distribution
+                </TableCaption>
+
+                <TableBody>
+                  {Object.entries(
+                    gender === "male" ? maleAgeBrackets : femaleAgeBrackets,
+                  ).map(([bracket, count]) => (
+                    <TableRow key={`${gender}-${bracket}`}>
+                      <TableCell className="text-lg font-bold">
+                        {bracket}
+                      </TableCell>
+                      <TableCell className="text-lg font-bold">
+                        {count}
+                      </TableCell>
+                      <TableCell className="flex justify-center space-x-2">
+                        <Button
+                          type="button"
+                          size="icon"
+                          onClick={() =>
+                            handleDecrement(
+                              bracket,
+                              gender as "male" | "female",
+                            )
+                          }
+                        >
+                          <MinusIcon className="h-4 w-4" />
+                        </Button>
+                        <Button
+                          type="button"
+                          size="icon"
+                          onClick={() =>
+                            handleIncrement(
+                              bracket,
+                              gender as "male" | "female",
+                            )
+                          }
+                        >
+                          <PlusIcon className="h-4 w-4" />
+                        </Button>
+                      </TableCell>
+                    </TableRow>
+                  ))}
+                </TableBody>
+                <TableFooter>
+                  <TableRow>
+                    <TableCell colSpan={2}>Total Entries</TableCell>
+                    <TableCell className="text-right">
+                      {Object.values(
+                        gender === "male" ? maleAgeBrackets : femaleAgeBrackets,
+                      ).reduce((acc, curr) => acc + curr, 0)}
+                    </TableCell>
+                  </TableRow>
+                </TableFooter>
+              </Table>
             ))}
           </div>
 
