@@ -4,7 +4,7 @@ import { currentUser } from "@clerk/nextjs/server";
 import type { Metadata } from "next";
 import localFont from "next/font/local";
 import { redirect } from "next/navigation";
-import "./globals.css";
+import "../globals.css";
 
 const geistSans = localFont({
   src: "./fonts/GeistVF.woff",
