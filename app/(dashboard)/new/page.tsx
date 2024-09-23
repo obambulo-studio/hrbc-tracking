@@ -13,7 +13,7 @@ import { Label } from "@/components/ui/label";
 import { useToast } from "@/hooks/use-toast";
 import { DialogTrigger } from "@radix-ui/react-dialog";
 import { MinusIcon, PlusIcon } from "@radix-ui/react-icons";
-import { Loader2 } from "lucide-react";
+import { Loader2, PlusCircle } from "lucide-react";
 import { useRouter } from "next/navigation"; // Add this import
 import { useState } from "react";
 import { z } from "zod";
@@ -97,7 +97,7 @@ export default function NewEntryPage() {
     }
 
     try {
-      const response = await fetch("/api/submit", {
+      const response = await fetch("/api/entry/submit", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -139,7 +139,8 @@ export default function NewEntryPage() {
         title: "Success",
         description: "Data submitted successfully!",
       });
-      router.push("/"); // Redirect to home
+      router.push("/");
+      router.refresh();
     } catch {
       toast({
         title: "Submission Error",
@@ -199,7 +200,12 @@ export default function NewEntryPage() {
                   <Button variant="destructive">Cancel</Button>
                 </DialogClose>
                 <Button onClick={handleSubmit} disabled={loading}>
-                  {loading ? <Loader2 className="animate-spin" /> : "Confirm"}
+                  {loading ? (
+                    <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+                  ) : (
+                    <PlusCircle className="mr-2 h-4 w-4" />
+                  )}
+                  <span>Confirm</span>
                 </Button>
               </DialogFooter>
             </DialogContent>

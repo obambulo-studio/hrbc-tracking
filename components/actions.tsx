@@ -18,9 +18,7 @@ import {
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 import { useToast } from "@/hooks/use-toast";
-import { PersonIcon } from "@radix-ui/react-icons";
 import { Loader2, MoreHorizontal, Trash } from "lucide-react";
-import Link from "next/link";
 import { usePathname, useRouter } from "next/navigation";
 import { useState, useTransition } from "react";
 
@@ -34,7 +32,7 @@ export default function EntryActions({ id }: { id: string }) {
   const isMutating = isLoading || isPending;
   const [showDeleteAlert, setShowDeleteAlert] = useState<boolean>(false);
 
-  async function deleteMission(id: string) {
+  async function deleteEntry(id: string) {
     const res = await fetch(`/api/entry/${id}`, {
       method: "DELETE",
       body: JSON.stringify({
@@ -63,14 +61,6 @@ export default function EntryActions({ id }: { id: string }) {
           </Button>
         </DropdownMenuTrigger>
         <DropdownMenuContent side="right" align="start">
-          <Link
-            href={`/dashboard/reactions/${id}`}
-            className="flex items-center"
-          >
-            <DropdownMenuItem className="w-full">
-              <PersonIcon className="w-4 h-4 mr-2" /> Attendees
-            </DropdownMenuItem>
-          </Link>
           <DropdownMenuItem
             className="flex items-center text-destructive focus:text-destructive "
             onSelect={() => setShowDeleteAlert(true)}
@@ -85,7 +75,7 @@ export default function EntryActions({ id }: { id: string }) {
         <AlertDialogContent>
           <AlertDialogHeader>
             <AlertDialogTitle>
-              Are you sure you want to delete this mission?
+              Are you sure you want to delete this entry?
             </AlertDialogTitle>
             <AlertDialogDescription>
               You are deleting {id}. This action cannot be undone.
@@ -94,18 +84,18 @@ export default function EntryActions({ id }: { id: string }) {
           <AlertDialogFooter>
             <AlertDialogCancel>Cancel</AlertDialogCancel>
             <AlertDialogAction
+              disabled={isMutating}
               onClick={async (event) => {
                 event.preventDefault();
                 setIsLoading(true);
 
-                const deleted = await deleteMission(id);
+                const deleted = await deleteEntry(id);
 
                 if (deleted) {
                   startTransition(() => {
                     if (pathname.includes(id)) {
                       router.push(`/`);
                     }
-                    // Force a cache invalidation.
                     router.refresh();
                   });
                   toast({
