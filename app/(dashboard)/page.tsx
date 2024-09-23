@@ -9,7 +9,7 @@ export default async function Home() {
   const data = await prisma.entry.findMany();
 
   return (
-    <div className="max-w-2xl mx-auto p-6 my-12 bg-black border rounded-2xl">
+    <div className="max-w-2xl mx-auto p-6 my-12 ">
       <Tabs defaultValue="entries" className="space-y-4">
         <TabsList className="w-auto grid grid-cols-2  h-auto">
           {["entries", "analytics"].map((tab) => (
@@ -18,12 +18,19 @@ export default async function Home() {
             </TabsTrigger>
           ))}
         </TabsList>
-        <TabsContent value="entries">
+        <TabsContent
+          value="entries"
+          className="bg-black border rounded-2xl p-6"
+        >
           <Link href="/new">
             <Button>New Entry</Button>
           </Link>
           <EntryDataTable columns={entryColumns} data={data} />
         </TabsContent>
+        <TabsContent
+          value="analytics"
+          className="bg-black border rounded-2xl p-6"
+        ></TabsContent>
       </Tabs>
     </div>
   );
