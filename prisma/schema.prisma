@@ -1,0 +1,43 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider  = "postgresql"
+  url  	    = env("DATABASE_URL")
+}
+
+model Entry {
+  id        String   @id @default(cuid())
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+  date      DateTime 
+  zeroToFour Int @default(0)
+  fiveToNine Int @default(0)
+  tenToFourteen Int @default(0)
+  fifteenToNineteen Int @default(0)
+  twentyToTwentyFour Int @default(0) 
+  twentyFiveToTwentyNine Int @default(0) 
+  thirtyToThirtyFour Int @default(0) 
+  thirtyFiveToThirtyNine Int @default(0) 
+  fortyToFortyFour Int @default(0) 
+  fortyFiveToFortyNine Int @default(0) 
+  fiftyToFiftyFour Int @default(0) 
+  fiftyFiveToFiftyNine Int @default(0) 
+  sixtyToSixtyFour Int @default(0) 
+  sixtyFiveToSixtyNine Int @default(0) 
+  seventyToSeventyFour Int @default(0) 
+  seventyFiveToSeventyNine Int @default(0) 
+  eightyToEightyFour Int @default(0) 
+  eightyFiveToEightyNine Int @default(0) 
+  ninetyToNinetyFour Int @default(0)
+  ninetyFivePlus Int @default(0) 
+  total Int @default(0)
+}
+
+model User {
+  id  String @id @default(cuid())
+  name  String
+  email String @unique
+  admin Boolean @default(false)
+}

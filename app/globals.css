@@ -1,0 +1,135 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  :root {
+    --background: 0 0% 3.9%;
+    --foreground: 0 0% 98%;
+    --card: 0 0% 3.9%;
+    --card-foreground: 0 0% 98%;
+    --popover: 0 0% 3.9%;
+    --popover-foreground: 0 0% 98%;
+    --primary: 0 0% 98%;
+    --primary-foreground: 0 0% 9%;
+    --secondary: 0 0% 14.9%;
+    --secondary-foreground: 0 0% 98%;
+    --muted: 0 0% 14.9%;
+    --muted-foreground: 0 0% 63.9%;
+    --accent: 0 0% 14.9%;
+    --accent-foreground: 0 0% 98%;
+    --destructive: 0 62.8% 30.6%;
+    --destructive-foreground: 0 0% 98%;
+    --border: 0 0% 14.9%;
+    --input: 0 0% 14.9%;
+    --ring: 0 0% 83.1%;
+
+    --radius: 0.5rem;
+  }
+}
+
+@layer base {
+  * {
+    @apply border-border;
+  }
+  body {
+    @apply bg-background text-foreground;
+  }
+}
+
+.cards {
+  display: grid;
+  --rows: 3;
+  grid-template-columns: repeat(
+    auto-fill,
+    minmax(max(250px, calc((100% - 1rem * 2) / var(--rows))), 1fr)
+  );
+}
+
+.card img {
+  -webkit-user-drag: none;
+}
+
+.card:hover svg {
+  color: currentColor;
+}
+
+.card svg {
+  width: 1.5rem;
+  color: #00000033;
+  transition: color 0.3s ease;
+}
+
+.card p {
+  margin-top: 0.5rem;
+}
+
+.card .title {
+  display: flex;
+  font-weight: 600;
+  align-items: flex-start;
+}
+
+:global(.dark) .card svg {
+  color: #ffffff66;
+}
+:global(.dark) .card:hover svg {
+  color: currentColor;
+}
+
+.steps-container {
+  margin-left: 1rem;
+  padding-left: 1.5rem;
+  counter-reset: step;
+  border-left: 1px solid;
+  border-color: rgb(229 231 235/1);
+  margin-bottom: 3rem;
+}
+.steps-container h3 {
+  counter-increment: step;
+}
+.steps-container h3:before {
+  content: counter(step);
+  display: inline-block;
+  position: absolute;
+  margin-top: 3px;
+  margin-left: -41px;
+  width: 33px;
+  height: 33px;
+  text-align: center;
+  text-indent: -1px;
+  color: #999;
+  border-radius: 100%;
+  border: 4px solid #fff;
+  background: #f3f3f3;
+  line-height: 1.5rem;
+  font-size: 1rem;
+  font-weight: 400;
+}
+
+.dark .steps-container {
+  border-color: #2e2e2e;
+}
+.dark .steps-container h3:before {
+  color: #999;
+  border: 4px solid rgba(17, 17, 17, var(--tw-bg-opacity));
+  background: #2e2e2e;
+}
+
+@layer base {
+  :root {
+    --chart-1: 12 76% 61%;
+    --chart-2: 173 58% 39%;
+    --chart-3: 197 37% 24%;
+    --chart-4: 43 74% 66%;
+    --chart-5: 27 87% 67%;
+  }
+
+  .dark {
+    --chart-1: 220 70% 50%;
+    --chart-2: 160 60% 45%;
+    --chart-3: 30 80% 55%;
+    --chart-4: 280 65% 60%;
+    --chart-5: 340 75% 55%;
+  }
+}
