@@ -1,12 +1,19 @@
 {
   "name": "hrbc-tracking",
-  "version": "0.1.0",
+  "version": "1.0.0",
   "private": true,
   "scripts": {
     "dev": "next dev",
     "build": "next build",
     "start": "next start",
-    "prettier": "prettier --write --ignore-unknown ."
+    "prettier": "prettier --write --ignore-unknown .",
+    "postinstall": "prisma generate"
+  },
+  "git": {
+    "pre-commit": "lint-staged"
+  },
+  "lint-staged": {
+    "*": "prettier --write --ignore-unknown"
   },
   "dependencies": {
     "@clerk/nextjs": "^5.6.0",
@@ -46,6 +53,7 @@
     "cmdk": "^1.0.0",
     "date-fns": "^3.6.0",
     "embla-carousel-react": "^8.3.0",
+    "hrbc-tracking": ".",
     "input-otp": "^1.2.4",
     "lucide-react": "^0.445.0",
     "next": "14.2.13",
@@ -71,7 +79,7 @@
     "eslint": "^9.11.0",
     "eslint-config-next": "14.2.3",
     "postcss": "^8.4.47",
-    "prettier": "3.2.5",
+    "prettier": "^3.3.3",
     "tailwindcss": "^3.4.12",
     "typescript": "^5.6.2"
   }
