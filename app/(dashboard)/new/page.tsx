@@ -1,6 +1,7 @@
 "use client";
 
 import { Button } from "@/components/ui/button";
+import { Calendar } from "@/components/ui/calendar";
 import {
   Dialog,
   DialogClose,
@@ -9,6 +10,12 @@ import {
   DialogFooter,
   DialogTitle,
 } from "@/components/ui/dialog";
+import { Input } from "@/components/ui/input";
+import {
+  Popover,
+  PopoverContent,
+  PopoverTrigger,
+} from "@/components/ui/popover";
 import {
   Table,
   TableBody,
@@ -20,9 +27,11 @@ import {
   TableRow,
 } from "@/components/ui/table";
 import { useToast } from "@/hooks/use-toast";
+import { cn } from "@/lib/utils";
 import { DialogTrigger } from "@radix-ui/react-dialog";
 import { MinusIcon, PlusIcon } from "@radix-ui/react-icons";
-import { Loader2, PlusCircle } from "lucide-react";
+import { format } from "date-fns";
+import { CalendarIcon, Loader2, PlusCircle } from "lucide-react";
 import { useRouter } from "next/navigation";
 import { useState } from "react";
 import { z } from "zod";
@@ -89,6 +98,7 @@ export default function NewEntryPage() {
     "95+": 0,
   });
   const [loading, setLoading] = useState(false);
+  const [date, setDate] = useState<Date>(new Date());
 
   const updateBracket = (
     bracket: string,
@@ -121,11 +131,28 @@ export default function NewEntryPage() {
   const handleDecrement = (bracket: string, gender: "male" | "female") =>
     updateBracket(bracket, false, gender);
 
+  const handleInputChange = (
+    bracket: string,
+    value: string,
+    gender: "male" | "female",
+  ) => {
+    const numValue = parseInt(value, 10);
+    const setAgeBrackets =
+      gender === "male" ? setMaleAgeBrackets : setFemaleAgeBrackets;
+
+    if (!isNaN(numValue) && numValue >= 0) {
+      setAgeBrackets((prev) => ({
+        ...prev,
+        [bracket]: numValue,
+      }));
+    }
+  };
+
   async function handleSubmit() {
     setLoading(true);
 
     const formattedData = {
-      date: new Date().toISOString(),
+      date: date.toISOString(),
       maleZeroToFour: maleAgeBrackets["0-4"],
       femaleZeroToFour: femaleAgeBrackets["0-4"],
       maleFiveToNine: maleAgeBrackets["5-9"],
@@ -205,6 +232,38 @@ export default function NewEntryPage() {
     <div className="max-w-4xl mx-auto p-6 my-12 bg-black border rounded-2xl">
       <div>
         <div className="space-y-8">
+          <div className="space-y-2">
+            <h1 className="text-2xl font-bold">New Entry</h1>
+            <p className="text-sm text-muted-foreground">
+              Please enter the number of attendees for each age bracket and
+              gender.
+            </p>
+            <div className="flex items-center space-x-4 mb-4">
+              <Popover>
+                <PopoverTrigger asChild>
+                  <Button
+                    variant={"outline"}
+                    className={cn(
+                      "w-[240px] justify-start text-left font-normal",
+                      !date && "text-muted-foreground",
+                    )}
+                  >
+                    <CalendarIcon className="mr-2 h-4 w-4" />
+                    {date ? format(date, "PPP") : <span>Pick a date</span>}
+                  </Button>
+                </PopoverTrigger>
+                <PopoverContent className="w-auto p-0" align="start">
+                  <Calendar
+                    mode="single"
+                    selected={date}
+                    onSelect={(newDate) => newDate && setDate(newDate)}
+                    initialFocus
+                  />
+                </PopoverContent>
+              </Popover>
+            </div>
+          </div>
+
           <div className="flex gap-4">
             {["male", "female"].map((gender) => (
               <Table key={gender} className="min-w-[45%]">
@@ -236,7 +295,19 @@ export default function NewEntryPage() {
                         {bracket}
                       </TableCell>
                       <TableCell className="text-lg font-bold">
-                        {count}
+                        <Input
+                          type="number"
+                          value={count}
+                          onChange={(e) =>
+                            handleInputChange(
+                              bracket,
+                              e.target.value,
+                              gender as "male" | "female",
+                            )
+                          }
+                          min="0"
+                          className="w-20 text-center"
+                        />
                       </TableCell>
                       <TableCell className="flex justify-center space-x-2">
                         <Button
@@ -290,7 +361,8 @@ export default function NewEntryPage() {
             <DialogContent>
               <DialogTitle>Confirm Submission</DialogTitle>
               <DialogDescription>
-                Are you sure the numbers are correct?
+                Are you sure you want to submit the entry for{" "}
+                {format(date, "PPP")}?
               </DialogDescription>
               <DialogFooter>
                 <DialogClose asChild>
