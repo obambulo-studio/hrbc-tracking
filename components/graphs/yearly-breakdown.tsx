@@ -21,15 +21,15 @@ export const description = "An area chart with gradient fill";
 const chartConfig = {
   male: {
     label: "Male",
-    color: "#2563eb",
+    color: "#e21d48",
   },
   female: {
     label: "Female",
-    color: "#60a5fa",
+    color: "#fbd5da",
   },
   total: {
     label: "Total",
-    color: "#34d399",
+    color: "#DC2626",
   },
 } satisfies ChartConfig;
 

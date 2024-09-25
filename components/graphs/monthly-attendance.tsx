@@ -108,11 +108,11 @@ export default function MonthlyAttendance({ data }: any) {
   const chartConfig = {
     male: {
       label: "Male",
-      color: "#2563eb",
+      color: "#e21d48",
     },
     female: {
       label: "Female",
-      color: "#60a5fa",
+      color: "#fbd5da",
     },
   } satisfies ChartConfig;
 

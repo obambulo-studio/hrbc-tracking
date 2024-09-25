@@ -19,19 +19,13 @@ export default async function Home() {
             </TabsTrigger>
           ))}
         </TabsList>
-        <TabsContent
-          value="entries"
-          className="bg-black border rounded-2xl p-6"
-        >
+        <TabsContent value="entries" className="border rounded-2xl p-6">
           <Link href="/new">
             <Button>New Entry</Button>
           </Link>
           <EntryDataTable columns={entryColumns} data={data} />
         </TabsContent>
-        <TabsContent
-          value="analytics"
-          className="bg-black border rounded-2xl p-6"
-        >
+        <TabsContent value="analytics" className="border rounded-2xl p-6">
           <Analytics data={data} />
         </TabsContent>
       </Tabs>

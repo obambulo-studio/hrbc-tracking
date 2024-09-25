@@ -229,7 +229,7 @@ export default function NewEntryPage() {
   }
 
   return (
-    <div className="max-w-4xl mx-auto p-6 my-12 bg-black border rounded-2xl">
+    <div className="max-w-4xl mx-auto p-6 my-12 border rounded-2xl">
       <div>
         <div className="space-y-8">
           <div className="space-y-2">
@@ -312,6 +312,7 @@ export default function NewEntryPage() {
                       <TableCell className="flex justify-center space-x-2">
                         <Button
                           type="button"
+                          variant="outline"
                           size="icon"
                           onClick={() =>
                             handleDecrement(
@@ -324,6 +325,7 @@ export default function NewEntryPage() {
                         </Button>
                         <Button
                           type="button"
+                          variant="outline"
                           size="icon"
                           onClick={() =>
                             handleIncrement(
@@ -366,7 +368,7 @@ export default function NewEntryPage() {
               </DialogDescription>
               <DialogFooter>
                 <DialogClose asChild>
-                  <Button variant="destructive">Cancel</Button>
+                  <Button variant="outline">Cancel</Button>
                 </DialogClose>
                 <Button onClick={handleSubmit} disabled={loading}>
                   {loading ? (
