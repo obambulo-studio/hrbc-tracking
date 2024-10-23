@@ -15,11 +15,9 @@ export const entryColumns: ColumnDef<Entry>[] = [
     accessorKey: "date",
     header: "Date",
     cell: ({ row }) => {
-      const date = row.original.date;
-      const formattedDate = format(new Date(date), "do MMMM yyyy");
       return (
         <div className="flex items-center">
-          <span>{formattedDate}</span>
+          <span>{format(new Date(row.original.date), "dd/LL/yyyy")}</span>
         </div>
       );
     },
@@ -27,7 +25,7 @@ export const entryColumns: ColumnDef<Entry>[] = [
 
   {
     accessorKey: "total",
-    header: "Total Attendees",
+    header: "Attendees",
     cell: ({ row }) => {
       const attendeesCount = row.original.total;
       return (

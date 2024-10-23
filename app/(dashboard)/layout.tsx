@@ -45,7 +45,7 @@ export default async function RootLayout({
         <body
           className={`${geistSans.variable} ${geistMono.variable} font-sans antialiased`}
         >
-          <div className="absolute top-4 right-4">
+          <div className="fixed top-4 right-4">
             <UserButton />
           </div>
           {children}

@@ -28,7 +28,6 @@ import {
 import {
   Table,
   TableBody,
-  TableCaption,
   TableCell,
   TableFooter,
   TableHead,
@@ -111,7 +110,7 @@ export default function NewEntryPage() {
   const [selectedService, setSelectedService] = useState<string | null>(null); // State for selected service
   const [isSubmitDisabled, setIsSubmitDisabled] = useState(true);
 
-  // Update this useEffect to check if date and service are selected
+  // Add this useEffect to check if date and service are selected
   useEffect(() => {
     setIsSubmitDisabled(!date || !selectedService);
   }, [date, selectedService]);
@@ -264,7 +263,7 @@ export default function NewEntryPage() {
   }
 
   return (
-    <div className="max-w-4xl mx-auto p-6 my-12 border rounded-2xl">
+    <div className="max-w-sm mx-auto p-6 my-12 border rounded-2xl">
       <div>
         <div className="space-y-8">
           <div className="space-y-2">
@@ -273,7 +272,7 @@ export default function NewEntryPage() {
               Please enter the number of attendees for each age bracket and
               gender.
             </p>
-            <div className="flex gap-2">
+            <div className="space-y-1">
               <div className="flex items-center space-x-4 mb-4">
                 <Popover>
                   <PopoverTrigger asChild>
@@ -299,7 +298,7 @@ export default function NewEntryPage() {
                 </Popover>
               </div>
 
-              <div className="space-y-2">
+              <div>
                 <Select
                   onValueChange={(value) => {
                     setSelectedService(value);
@@ -328,104 +327,117 @@ export default function NewEntryPage() {
             </div>
           </div>
 
-          <div className="flex gap-4">
-            {["male", "female"].map((gender) => (
-              <Table key={gender} className="min-w-[45%]">
-                <TableHeader>
-                  <TableRow>
-                    <TableHead className="w-full text-center" colSpan={3}>
-                      {gender.charAt(0).toUpperCase() + gender.slice(1)} Age
-                      Distribution
-                    </TableHead>
-                  </TableRow>
-                  <TableRow>
-                    <TableHead>Age Bracket</TableHead>
-                    <TableHead>Count</TableHead>
-                    <TableHead className="text-center">Actions</TableHead>
-                  </TableRow>
-                </TableHeader>
-
-                <TableCaption>
-                  {gender.charAt(0).toUpperCase() + gender.slice(1)} Age
-                  Distribution
-                </TableCaption>
-
-                <TableBody>
-                  {Object.entries(
-                    gender === "male" ? maleAgeBrackets : femaleAgeBrackets,
-                  ).map(([bracket, count]) => (
-                    <TableRow key={`${gender}-${bracket}`}>
-                      <TableCell className="text-lg font-bold">
-                        {bracket}
-                      </TableCell>
-                      <TableCell className="text-lg font-bold">
-                        <Input
-                          type="number"
-                          value={count}
-                          onChange={(e) =>
-                            handleInputChange(
-                              bracket,
-                              e.target.value,
-                              gender as "male" | "female",
-                            )
-                          }
-                          min="0"
-                          className="w-20 text-center"
-                        />
-                      </TableCell>
-                      <TableCell className="flex justify-center space-x-2">
+          <Table className="w-full">
+            <TableHeader>
+              <TableRow>
+                <TableHead className="text-center">Male</TableHead>
+                <TableHead className="text-center">Age</TableHead>
+                <TableHead className="text-center">Female</TableHead>
+              </TableRow>
+            </TableHeader>
+            <TableBody>
+              {Object.entries(maleAgeBrackets).map(([bracket, maleCount]) => {
+                const femaleCount = femaleAgeBrackets[bracket];
+                return (
+                  <TableRow key={bracket}>
+                    <TableCell className="p-2">
+                      <div className="flex items-center justify-center space-x-0.5">
                         <Button
                           type="button"
                           variant="outline"
                           size="icon"
-                          onClick={() =>
-                            handleDecrement(
-                              bracket,
-                              gender as "male" | "female",
-                            )
-                          }
+                          onClick={() => handleDecrement(bracket, "male")}
                         >
                           <MinusIcon className="h-4 w-4" />
                         </Button>
+                        <Input
+                          type="text"
+                          inputMode="numeric"
+                          pattern="[0-9]*"
+                          value={maleCount}
+                          onChange={(e) =>
+                            handleInputChange(bracket, e.target.value, "male")
+                          }
+                          className="w-10 text-center"
+                        />
                         <Button
                           type="button"
                           variant="outline"
                           size="icon"
-                          onClick={() =>
-                            handleIncrement(
-                              bracket,
-                              gender as "male" | "female",
-                            )
-                          }
+                          onClick={() => handleIncrement(bracket, "male")}
                         >
                           <PlusIcon className="h-4 w-4" />
                         </Button>
-                      </TableCell>
-                    </TableRow>
-                  ))}
-                </TableBody>
-                <TableFooter>
-                  <TableRow>
-                    <TableCell colSpan={2}>Total Entries</TableCell>
-                    <TableCell className="text-right">
-                      {Object.values(
-                        gender === "male" ? maleAgeBrackets : femaleAgeBrackets,
-                      ).reduce((acc, curr) => acc + curr, 0)}
+                      </div>
+                    </TableCell>
+                    <TableCell className="font-bold text-center p-2">
+                      {bracket}
+                    </TableCell>
+                    <TableCell className="p-2">
+                      <div className="flex items-center justify-center space-x-0.5">
+                        <Button
+                          type="button"
+                          variant="outline"
+                          size="icon"
+                          onClick={() => handleDecrement(bracket, "female")}
+                        >
+                          <MinusIcon className="h-4 w-4" />
+                        </Button>
+                        <Input
+                          type="text"
+                          inputMode="numeric"
+                          pattern="[0-9]*"
+                          value={femaleCount}
+                          onChange={(e) =>
+                            handleInputChange(bracket, e.target.value, "female")
+                          }
+                          className="w-10 text-center"
+                        />
+                        <Button
+                          type="button"
+                          variant="outline"
+                          size="icon"
+                          onClick={() => handleIncrement(bracket, "female")}
+                        >
+                          <PlusIcon className="h-4 w-4" />
+                        </Button>
+                      </div>
                     </TableCell>
                   </TableRow>
-                </TableFooter>
-              </Table>
-            ))}
-          </div>
+                );
+              })}
+            </TableBody>
+            <TableFooter>
+              <TableRow>
+                <TableCell className="text-right">
+                  Total:{" "}
+                  {Object.values(maleAgeBrackets).reduce(
+                    (acc, curr) => acc + curr,
+                    0,
+                  )}
+                </TableCell>
+                <TableCell />
+                <TableCell className="text-right">
+                  Total:{" "}
+                  {Object.values(femaleAgeBrackets).reduce(
+                    (acc, curr) => acc + curr,
+                    0,
+                  )}
+                </TableCell>
+              </TableRow>
+            </TableFooter>
+          </Table>
 
           <Dialog>
-            <DialogTrigger asChild>
-              <div>
-                <Button className="w-full" disabled={isSubmitDisabled}>
-                  Submit
-                </Button>
-              </div>
-            </DialogTrigger>
+            {isSubmitDisabled ? (
+              <Button className="w-full" disabled={true}>
+                Submit
+              </Button>
+            ) : (
+              <DialogTrigger asChild>
+                <Button className="w-full">Submit</Button>
+              </DialogTrigger>
+            )}
             <DialogContent>
               <DialogTitle>Confirm Submission</DialogTitle>
               <DialogDescription>
@@ -436,10 +448,7 @@ export default function NewEntryPage() {
                 <DialogClose asChild>
                   <Button variant="outline">Cancel</Button>
                 </DialogClose>
-                <Button
-                  onClick={handleSubmit}
-                  disabled={loading || isSubmitDisabled}
-                >
+                <Button onClick={handleSubmit} disabled={loading}>
                   {loading ? (
                     <Loader2 className="mr-2 h-4 w-4 animate-spin" />
                   ) : (
