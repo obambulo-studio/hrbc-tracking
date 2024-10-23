@@ -17,6 +17,15 @@ import {
   PopoverTrigger,
 } from "@/components/ui/popover";
 import {
+  Select,
+  SelectContent,
+  SelectGroup,
+  SelectItem,
+  SelectLabel,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
+import {
   Table,
   TableBody,
   TableCaption,
@@ -33,7 +42,7 @@ import { MinusIcon, PlusIcon } from "@radix-ui/react-icons";
 import { format } from "date-fns";
 import { CalendarIcon, Loader2, PlusCircle } from "lucide-react";
 import { useRouter } from "next/navigation";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { z } from "zod";
 
 type AgeBrackets = {
@@ -99,6 +108,13 @@ export default function NewEntryPage() {
   });
   const [loading, setLoading] = useState(false);
   const [date, setDate] = useState<Date>(new Date());
+  const [selectedService, setSelectedService] = useState<string | null>(null); // State for selected service
+  const [isSubmitDisabled, setIsSubmitDisabled] = useState(true);
+
+  // Update this useEffect to check if date and service are selected
+  useEffect(() => {
+    setIsSubmitDisabled(!date || !selectedService);
+  }, [date, selectedService]);
 
   const updateBracket = (
     bracket: string,
@@ -148,11 +164,30 @@ export default function NewEntryPage() {
     }
   };
 
+  const handleServiceSelect = (service: string) => {
+    setSelectedService(service);
+    toast({
+      title: "Service Selected",
+      description: `You have selected: ${service}`,
+    });
+  };
+
   async function handleSubmit() {
+    if (isSubmitDisabled) {
+      toast({
+        title: "Submission Error",
+        description:
+          "Please select both a date and a service before submitting.",
+        variant: "destructive",
+      });
+      return;
+    }
+
     setLoading(true);
 
     const formattedData = {
       date: date.toISOString(),
+      service: selectedService,
       maleZeroToFour: maleAgeBrackets["0-4"],
       femaleZeroToFour: femaleAgeBrackets["0-4"],
       maleFiveToNine: maleAgeBrackets["5-9"],
@@ -238,29 +273,58 @@ export default function NewEntryPage() {
               Please enter the number of attendees for each age bracket and
               gender.
             </p>
-            <div className="flex items-center space-x-4 mb-4">
-              <Popover>
-                <PopoverTrigger asChild>
-                  <Button
-                    variant={"outline"}
-                    className={cn(
-                      "w-[240px] justify-start text-left font-normal",
-                      !date && "text-muted-foreground",
-                    )}
-                  >
-                    <CalendarIcon className="mr-2 h-4 w-4" />
-                    {date ? format(date, "PPP") : <span>Pick a date</span>}
-                  </Button>
-                </PopoverTrigger>
-                <PopoverContent className="w-auto p-0" align="start">
-                  <Calendar
-                    mode="single"
-                    selected={date}
-                    onSelect={(newDate) => newDate && setDate(newDate)}
-                    initialFocus
-                  />
-                </PopoverContent>
-              </Popover>
+            <div className="flex gap-2">
+              <div className="flex items-center space-x-4 mb-4">
+                <Popover>
+                  <PopoverTrigger asChild>
+                    <Button
+                      variant={"outline"}
+                      className={cn(
+                        "w-[240px] justify-start text-left font-normal",
+                        !date && "text-muted-foreground",
+                      )}
+                    >
+                      <CalendarIcon className="mr-2 h-4 w-4" />
+                      {date ? format(date, "PPP") : <span>Pick a date</span>}
+                    </Button>
+                  </PopoverTrigger>
+                  <PopoverContent className="w-auto p-0" align="start">
+                    <Calendar
+                      mode="single"
+                      selected={date}
+                      onSelect={(newDate) => newDate && setDate(newDate)}
+                      initialFocus
+                    />
+                  </PopoverContent>
+                </Popover>
+              </div>
+
+              <div className="space-y-2">
+                <Select
+                  onValueChange={(value) => {
+                    setSelectedService(value);
+                    handleServiceSelect(value); // Trigger handleServiceSelect
+                  }}
+                >
+                  <SelectTrigger className="w-[180px]">
+                    <SelectValue placeholder="Select a service" />
+                  </SelectTrigger>
+                  <SelectContent>
+                    <SelectGroup>
+                      <SelectLabel>Select a service</SelectLabel>
+                      <SelectItem value="FIRST_SERVICE">
+                        First Service
+                      </SelectItem>
+                      <SelectItem value="SECOND_SERVICE">
+                        Second Service
+                      </SelectItem>
+                      <SelectItem value="THIRD_SERVICE">
+                        Third Service
+                      </SelectItem>
+                    </SelectGroup>
+                  </SelectContent>
+                </Select>
+              </div>
             </div>
           </div>
 
@@ -357,20 +421,25 @@ export default function NewEntryPage() {
           <Dialog>
             <DialogTrigger asChild>
               <div>
-                <Button className="w-full">Submit</Button>
+                <Button className="w-full" disabled={isSubmitDisabled}>
+                  Submit
+                </Button>
               </div>
             </DialogTrigger>
             <DialogContent>
               <DialogTitle>Confirm Submission</DialogTitle>
               <DialogDescription>
                 Are you sure you want to submit the entry for{" "}
-                {format(date, "PPP")}?
+                {date ? format(date, "PPP") : "the selected date"}?
               </DialogDescription>
               <DialogFooter>
                 <DialogClose asChild>
                   <Button variant="outline">Cancel</Button>
                 </DialogClose>
-                <Button onClick={handleSubmit} disabled={loading}>
+                <Button
+                  onClick={handleSubmit}
+                  disabled={loading || isSubmitDisabled}
+                >
                   {loading ? (
                     <Loader2 className="mr-2 h-4 w-4 animate-spin" />
                   ) : (

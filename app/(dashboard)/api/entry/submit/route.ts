@@ -8,6 +8,7 @@ export async function POST(request: Request) {
     const entry = await prisma.entry.create({
       data: {
         date: body.date,
+        service: body.service,
         maleZeroToFour: body.maleZeroToFour,
         femaleZeroToFour: body.femaleZeroToFour,
         maleFiveToNine: body.maleFiveToNine,

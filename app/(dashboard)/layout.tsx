@@ -1,5 +1,5 @@
 import { Toaster } from "@/components/ui/toaster";
-import { ClerkProvider } from "@clerk/nextjs";
+import { ClerkProvider, UserButton } from "@clerk/nextjs";
 import { currentUser } from "@clerk/nextjs/server";
 import type { Metadata } from "next";
 import localFont from "next/font/local";
@@ -45,6 +45,9 @@ export default async function RootLayout({
         <body
           className={`${geistSans.variable} ${geistMono.variable} antialiased`}
         >
+          <div className="absolute top-4 right-4">
+            <UserButton />
+          </div>
           {children}
           <Toaster />
         </body>

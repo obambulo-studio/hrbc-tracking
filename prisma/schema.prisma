@@ -12,6 +12,7 @@ model Entry {
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
   date      DateTime 
+  service   ServiceType
   maleZeroToFour Int @default(0)
   femaleZeroToFour Int @default(0)
   maleFiveToNine Int @default(0)
@@ -53,4 +54,10 @@ model Entry {
   maleNinetyFivePlus Int @default(0) 
   femaleNinetyFivePlus Int @default(0) 
   total Int @default(0)
+}
+
+enum ServiceType {
+  FIRST_SERVICE
+  SECOND_SERVICE
+  THIRD_SERVICE
 }
